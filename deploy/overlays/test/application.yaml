@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd-image-updater.argoproj.io/update-strategy: latest
+    argocd-image-updater.argoproj.io/force-update: 'true'
+    argocd-image-updater.argoproj.io/git-branch: main
+spec:
+  destination:
+    name: ''
+    namespace: argocd
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: deploy/overlays/test
+    repoURL: 'https://github.com/bienvangm/testargocd.git'
+    targetRevision: HEAD
+  project: app
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
